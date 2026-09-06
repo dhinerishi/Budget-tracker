@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Native Expense Tracker</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #ca8a04;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; }
+        
+        .app-container { width: 100%; max-width: 480px; min-height: 100vh; background: var(--bg); position: relative; padding-bottom: 100px; }
+        
+        header { padding: 16px 20px; background: var(--card); text-align: center; font-weight: bold; font-size: 1.1rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center;}
+        
+        .cloud-btn { background: #f1f5f9; border: none; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; color: var(--primary); font-weight: bold; }
+
+        .dashboard { padding: 16px 20px 0 20px; }
+        .balance-card { background: var(--primary); color: white; padding: 20px; border-radius: 16px; text-align: center; box-shadow: var(--shadow); margin-bottom: 15px; }
+        .balance-card h2 { font-size: 2.2rem; margin: 8px 0 0 0; }
+        
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .summary-box { background: var(--card); padding: 12px; border-radius: 12px; box-shadow: var(--shadow); text-align: center; }
+        .summary-box.green { color: var(--success); }
+        .summary-box.red { color: var(--danger); }
+        .summary-box h4 { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+        .summary-box p { font-size: 1.1rem; font-weight: bold; }
+
+        .section-title { font-size: 0.85rem; color: var(--text-muted); margin: 20px 20px 8px 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .transaction-list { padding: 0 20px; }
+        .transaction-item { background: var(--card); padding: 14px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); cursor: pointer; border-left: 4px solid transparent; }
+        .transaction-item.expense { border-left-color: var(--danger); }
+        .transaction-item.income { border-left-color: var(--success); }
+        .transaction-item.lend { border-left-color: var(--warning); }
+        .transaction-item.borrow { border-left-color: var(--primary); }
+        .transaction-item.investment { border-left-color: #8b5cf6; }
+        .transaction-item.emi { border-left-color: #f97316; }
+        
+        .t-info h4 { font-size: 0.95rem; margin-bottom: 3px; color: var(--text-main); }
+        .t-info p { font-size: 0.75rem; color: var(--text-muted); }
+        .t-amount { font-weight: bold; font-size: 1rem; }
+        .t-amount.expense { color: var(--danger); }
+        .t-amount.income { color: var(--success); }
+
+        .fab { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: 56px; height: 56px; background: var(--primary); color: white; border-radius: 28px; display: flex; justify-content: center; align-items: center; font-size: 2rem; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4); cursor: pointer; z-index: 999; border: none; }
+
+        /* Modal Overlay */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
+        .modal-content { background: var(--bg); width: 100%; max-width: 480px; max-height: 85vh; border-radius: 20px 20px 0 0; padding: 20px; overflow-y: auto; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 1.1rem; font-weight: bold; }
+        .close-btn { background: #e2e8f0; border: none; width: 32px; height: 32px; border-radius: 16px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-main); }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.85rem; margin-bottom: 4px; font-weight: 500; color: var(--text-muted); }
+        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; background: var(--card); color: var(--text-main); outline: none; }
+        select.form-control { appearance: none; background-color: var(--card); }
+        
+        .btn-submit { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 8px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+
+        .bill-image-preview { width: 100%; max-height: 180px; object-fit: contain; border-radius: 8px; margin-top: 10px; background: #000; display: none; }
+        .comments-section { margin-top: 15px; border-top: 1px solid var(--border); padding-top: 12px; }
+        .comment-item { background: #f1f5f9; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px; }
+        .add-comment-box { display: flex; gap: 8px; margin-top: 8px; }
+        .add-comment-box input { flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: var(--card); }
+        .add-comment-box button { padding: 10px 14px; background: var(--text-main); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        .empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <span>My Ledger</span>
+        <button class="cloud-btn" id="sync-btn">Sync ☁️</button>
+    </header>
+
+    <div class="dashboard">
+        <div class="balance-card">
+            <p style="font-size: 0.85rem; opacity: 0.9;">Total Balance</p>
+            <h2 id="total-balance">₹0.00</h2>
+        </div>
+        
+        <div class="summary-grid">
+            <div class="summary-box green">
+                <h4>Income / Savings</h4>
+                <p id="total-income">₹0.00</p>
+            </div>
+            <div class="summary-box red">
+                <h4>Expenses</h4>
+                <p id="total-expense">₹0.00</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">Recent Transactions</div>
+    <div class="transaction-list" id="transaction-list"></div>
+
+    <button class="fab" id="fab-add">+</button>
+</div>
+
+<!-- Add Transaction Modal -->
+<div class="modal" id="addModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>Add Record</span>
+            <button class="close-btn" id="close-add-modal">&times;</button>
+        </div>
+        <form id="add-form">
+            <div class="form-group">
+                <label>Amount (₹)</label>
+                <input type="number" id="amount" class="form-control" step="any" required placeholder="0.00">
+            </div>
+            <div class="form-group">
+                <label>Type / Category</label>
+                <select id="type" class="form-control">
+                    <option value="expense">Regular Expense / Bill</option>
+                    <option value="income">Income / Credit</option>
+                    <option value="lend">Lending Money</option>
+                    <option value="borrow">Borrowing Money</option>
+                    <option value="investment">Investment & Savings</option>
+                    <option value="emi">Monthly EMI</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Description / Title</label>
+                <input type="text" id="desc" class="form-control" required placeholder="e.g. Grocery, Salary, Rent">
+            </div>
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="date" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Attach Bill / Receipt Photo (Optional)</label>
+                <input type="file" id="bill-image" class="form-control" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label>Initial Comment / Note (Optional)</label>
+                <input type="text" id="comment" class="form-control" placeholder="Add tracking note...">
+            </div>
+            <button type="submit" class="btn-submit">Save Record</button>
+        </form>
+    </div>
+</div>
+
+<!-- Transaction Details Modal -->
+<div class="modal" id="detailsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>Record Details</span>
+            <button class="close-btn" id="close-details-modal">&times;</button>
+        </div>
+        <div id="details-content">
+            <h2 id="det-amount" style="font-size: 1.8rem; margin-bottom: 2px;">₹0.00</h2>
+            <p id="det-desc" style="font-size: 1rem; font-weight: bold; color: var(--text-main);"></p>
+            <p id="det-date" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;"></p>
+            
+            <img id="det-image" class="bill-image-preview">
+            
+            <div class="comments-section">
+                <h4 style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">Comments Tracker</h4>
+                <div id="comments-list"></div>
+                <div class="add-comment-box">
+                    <input type="text" id="new-comment" placeholder="Add a follow-up comment...">
+                    <button type="button" id="btn-add-comment">Post</button>
+                </div>
+            </div>
+            <button type="button" id="btn-delete-record" class="btn-submit" style="background: var(--danger); margin-top: 15px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);">Delete Record</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Safe storage handler with memory fallback
+    let transactions = [];
+    try {
+        const saved = localStorage.getItem('native_tracker_data');
+        if (saved) transactions = JSON.parse(saved);
+    } catch(e) {
+        transactions = [];
+    }
+
+    let currentViewId = null;
+
+    function saveData() {
+        try {
+            localStorage.setItem('native_tracker_data', JSON.stringify(transactions));
+        } catch(e) {
+            // Fallback if local storage is disabled by the file viewer app
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const dateInput = document.getElementById('date');
+        if(dateInput) dateInput.valueAsDate = new Date();
+
+        updateUI();
+
+        // Event Bindings
+        document.getElementById('fab-add').onclick = () => openModal('addModal');
+        document.getElementById('close-add-modal').onclick = () => closeModal('addModal');
+        document.getElementById('close-details-modal').onclick = () => closeModal('detailsModal');
+        document.getElementById('sync-btn').onclick = () => alert('Running 100% locally. Storage active.');
+        
+        document.getElementById('add-form').onsubmit = handleFormSubmit;
+        document.getElementById('btn-add-comment').onclick = addComment;
+        document.getElementById('btn-delete-record').onclick = deleteTransaction;
+    });
+
+    function updateUI() {
+        const listEl = document.getElementById('transaction-list');
+        const balanceEl = document.getElementById('total-balance');
+        const incomeEl = document.getElementById('total-income');
+        const expenseEl = document.getElementById('total-expense');
+        
+        if (!listEl) return;
+        
+        listEl.innerHTML = '';
+        let totalExp = 0, totalInc = 0;
+
+        if (transactions.length === 0) {
+            listEl.innerHTML = '<div class="empty-state">No transactions added yet.<br>Tap the [+] button below to start tracking.</div>';
+        }
+
+        const sorted = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        sorted.forEach(t => {
+            if (['expense', 'lend', 'emi'].includes(t.type)) totalExp += t.amount;
+            if (['income', 'borrow', 'investment'].includes(t.type)) totalInc += t.amount;
+
+            const div = document.createElement('div');
+            div.className = `transaction-item ${t.type}`;
+            div.onclick = () => openDetails(t.id);
+            
+            const isNegative = ['expense', 'lend', 'emi'].includes(t.type);
+            const prefix = isNegative ? '-' : '+';
+            const amountClass = isNegative ? 'expense' : 'income';
+
+            div.innerHTML = `
+                <div class="t-info">
+                    <h4>${escapeHtml(t.desc)}</h4>
+                    <p>${t.date} • ${t.type.toUpperCase()}</p>
+                </div>
+                <div class="t-amount ${amountClass}">${prefix}₹${t.amount.toFixed(2)}</div>
+            `;
+            listEl.appendChild(div);
+        });
+
+        balanceEl.innerText = `₹${(totalInc - totalExp).toFixed(2)}`;
+        incomeEl.innerText = `₹${totalInc.toFixed(2)}`;
+        expenseEl.innerText = `₹${totalExp.toFixed(2)}`;
+    }
+
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        if(modal) modal.style.display = 'flex';
+    }
+    
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if(modal) modal.style.display = 'none';
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        
+        const fileInput = document.getElementById('bill-image');
+        const file = fileInput.files ? fileInput.files[0] : null;
+        
+        const newRecord = {
+            id: Date.now(),
+            amount: parseFloat(document.getElementById('amount').value) || 0,
+            type: document.getElementById('type').value,
+            desc: document.getElementById('desc').value,
+            date: document.getElementById('date').value,
+            comments: [],
+            image: null
+        };
+
+        const initialComment = document.getElementById('comment').value.trim();
+        if(initialComment) {
+            newRecord.comments.push({ text: initialComment, date: new Date().toLocaleDateString() });
+        }
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 400;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    newRecord.image = canvas.toDataURL('image/jpeg', 0.4);
+                    saveRecordAndReset(newRecord);
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        } else {
+            saveRecordAndReset(newRecord);
+        }
+    }
+
+    function saveRecordAndReset(record) {
+        transactions.push(record);
+        saveData();
+        document.getElementById('add-form').reset();
+        document.getElementById('date').valueAsDate = new Date();
+        closeModal('addModal');
+        updateUI();
+    }
+
+    function openDetails(id) {
+        currentViewId = id;
+        const t = transactions.find(x => x.id === id);
+        if(!t) return;
+
+        document.getElementById('det-amount').innerText = `₹${t.amount.toFixed(2)}`;
+        document.getElementById('det-desc').innerText = t.desc;
+        document.getElementById('det-date').innerText = `${t.date} • ${t.type.toUpperCase()}`;
+        
+        const imgEl = document.getElementById('det-image');
+        if(t.image) {
+            imgEl.src = t.image;
+            imgEl.style.display = 'block';
+        } else {
+            imgEl.style.display = 'none';
+            imgEl.src = '';
+        }
+
+        renderComments();
+        openModal('detailsModal');
+    }
+
+    function renderComments() {
+        const t = transactions.find(x => x.id === currentViewId);
+        const list = document.getElementById('comments-list');
+        if(!list || !t) return;
+        
+        list.innerHTML = '';
+        if(!t.comments || t.comments.length === 0) {
+            list.innerHTML = '<div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">No comments added yet.</div>';
+            return;
+        }
+        t.comments.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'comment-item';
+            div.innerHTML = `<strong>${c.date}:</strong> ${escapeHtml(c.text)}`;
+            list.appendChild(div);
+        });
+    }
+
+    function addComment() {
+        const input = document.getElementById('new-comment');
+        if(!input) return;
+        const val = input.value.trim();
+        if(!val) return;
+
+        const tIndex = transactions.findIndex(x => x.id === currentViewId);
+        if(tIndex === -1) return;
+
+        if(!transactions[tIndex].comments) {
+            transactions[tIndex].comments = [];
+        }
+
+        transactions[tIndex].comments.push({
+            text: val,
+            date: new Date().toLocaleDateString()
+        });
+        
+        saveData();
+        input.value = '';
+        renderComments();
+    }
+
+    function deleteTransaction() {
+        if(confirm("Delete this record permanently?")) {
+            transactions = transactions.filter(x => x.id !== currentViewId);
+            saveData();
+            closeModal('detailsModal');
+            updateUI();
+        }
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+</script>
+</body>
+</html>
+
