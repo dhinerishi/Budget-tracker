@@ -10,7 +10,7 @@
 :root {
   --bg-core: #f8fafc;
   --bg-card: #ffffff;
-  --bg-card-hover: #f1f5f9;
+  --bg-subcard: #f1f5f9;
   --primary: #4f46e5;
   --primary-glow: rgba(79, 70, 229, 0.2);
   --success: #059669;
@@ -38,9 +38,9 @@ header { padding: 16px 20px; background: rgba(255, 255, 255, 0.9); backdrop-filt
 .balance-card span { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; font-weight: 700; }
 .balance-card h2 { font-size: 2.2rem; margin: 4px 0 12px 0; font-weight: 800; letter-spacing: -1px; }
 
-.fund-split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); }
-.fund-split-item small { font-size: 0.68rem; opacity: 0.85; text-transform: uppercase; display: block; font-weight: 700; }
-.fund-split-item strong { font-size: 0.95rem; font-weight: 700; }
+.fund-split-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; background: rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); }
+.fund-split-item small { font-size: 0.65rem; opacity: 0.85; text-transform: uppercase; display: block; font-weight: 700; }
+.fund-split-item strong { font-size: 0.9rem; font-weight: 700; }
 .fund-split-item.liquid strong { color: #6ee7b7; }
 .fund-split-item.locked strong { color: #e9d5ff; }
 .fund-split-item.receivable strong { color: #fde047; }
@@ -52,7 +52,7 @@ header { padding: 16px 20px; background: rgba(255, 255, 255, 0.9); backdrop-filt
 .summary-box.income p { color: var(--success); }
 .summary-box.expense p { color: var(--danger); }
 
-.analytics-trigger-btn { width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 12px; border-radius: var(--radius); font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: var(--shadow); }
+.analytics-trigger-btn { width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 13px; border-radius: var(--radius); font-weight: 700; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: var(--shadow); }
 
 .section-title-wrapper { display: flex; justify-content: space-between; align-items: center; margin: 20px 20px 10px 20px; }
 .section-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
@@ -97,10 +97,16 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 .inline-cat-box { display: flex; gap: 6px; }
 .add-inline-cat-btn { width: 44px; height: 44px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px; font-size: 1.2rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 
-.tracker-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
-.tracker-card h5 { font-size: 0.85rem; font-weight: 800; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-.tracker-card p { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
-.tracker-amt { font-size: 1rem; font-weight: 800; color: var(--primary); }
+.report-section { margin-bottom: 18px; }
+.report-section h4 { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+
+.tracker-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 8px; }
+.tracker-card h5 { font-size: 0.88rem; font-weight: 800; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.tracker-amt { font-size: 0.95rem; font-weight: 800; color: var(--primary); }
+
+.mode-breakdown-list { margin-top: 6px; border-top: 1px dashed var(--border); padding-top: 6px; }
+.mode-breakdown-item { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-muted); padding: 2px 0; font-weight: 600; }
+.mode-breakdown-item span.mode-val { color: var(--text-main); font-weight: 700; }
 
 .empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 0.85rem; line-height: 1.5; }
 </style>
@@ -129,7 +135,7 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 
       <div class="fund-split-row">
         <div class="fund-split-item liquid">
-          <small>Liquid (Savings)</small>
+          <small>Liquid Savings</small>
           <strong id="liquid-funds-val">₹0.00</strong>
         </div>
         <div class="fund-split-item locked">
@@ -155,7 +161,7 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
     </div>
 
     <button class="analytics-trigger-btn" id="btn-open-analytics">
-      📊 View Savings & Investments Portfolio Breakdown
+      📊 View Detailed Complete Financial Report
     </button>
   </div>
 
@@ -186,35 +192,43 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
         <label>Type</label>
         <select id="type" class="form-control">
           <option value="expense">Regular Expense / Bill</option>
-          <option value="income">Income / Salary Credit</option>
-          <option value="savings">Savings (Custom Bucket / Goal)</option>
+          <option value="income">Income / Credit</option>
+          <option value="savings">Savings (Goal / Bucket)</option>
           <option value="investment">Investment (Asset / Stocks / FD)</option>
           <option value="lend">Lending (Money Owed to You)</option>
           <option value="borrow">Borrowing (Money You Owe)</option>
         </select>
       </div>
 
+      <!-- Income Extra Field: Mode/Source -->
+      <div id="income-extra-fields" style="display:none;">
+        <div class="form-group">
+          <label>Income Mode / Source</label>
+          <input type="text" id="income-source" class="form-control" placeholder="e.g. Salary Account, Freelance Client, Cash">
+        </div>
+      </div>
+
       <!-- Dynamic Extra Fields for Custom Savings -->
       <div id="savings-extra-fields" style="display:none;">
         <div class="form-group">
-          <label>Savings Purpose / Goal</label>
+          <label>Savings Purpose / Goal Name</label>
           <input type="text" id="savings-goal-name" class="form-control" placeholder="e.g. Emergency Fund, New Scooter">
         </div>
         <div class="form-group">
-          <label>Saving Mode / Account</label>
-          <input type="text" id="savings-mode" class="form-control" placeholder="e.g. HDFC Auto-Sweep, Cash, RD">
+          <label>Saving Mode / Account for this entry</label>
+          <input type="text" id="savings-mode" class="form-control" placeholder="e.g. Liquid Cash, RD, HDFC Auto-Sweep">
         </div>
       </div>
 
       <!-- Dynamic Extra Fields for Custom Investment -->
       <div id="investment-extra-fields" style="display:none;">
         <div class="form-group">
-          <label>Investment Name / Purpose</label>
-          <input type="text" id="inv-name" class="form-control" placeholder="e.g. Nifty 50 Index, SGB Gold, Mutual Fund">
+          <label>Investment Purpose / Asset Name</label>
+          <input type="text" id="inv-name" class="form-control" placeholder="e.g. Nifty 50 Index, SGB Gold, Child Education">
         </div>
         <div class="form-group">
-          <label>Investment Mode / Platform</label>
-          <input type="text" id="inv-mode" class="form-control" placeholder="e.g. Zerodha, Groww, Post Office">
+          <label>Investment Mode / Platform for this entry</label>
+          <input type="text" id="inv-mode" class="form-control" placeholder="e.g. Zerodha, Groww, Post Office, SIP">
         </div>
       </div>
 
@@ -227,8 +241,8 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
       </div>
 
       <div class="form-group">
-        <label>Title / Description</label>
-        <input type="text" id="desc" class="form-control" required placeholder="e.g. Monthly SIP, Groceries, Loan to Kumar">
+        <label>Title / Note</label>
+        <input type="text" id="desc" class="form-control" required placeholder="e.g. Monthly Savings, Groceries, Loan to Friend">
       </div>
 
       <div class="form-group">
@@ -262,7 +276,7 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 <div class="modal" id="analyticsModal">
   <div class="modal-content" style="max-height:85vh;">
     <div class="modal-header">
-      <span>Savings & Investment Breakdown</span>
+      <span>Complete Financial Report</span>
       <button class="close-btn" id="close-analytics-modal">&times;</button>
     </div>
     <div id="analytics-report-body"></div>
@@ -331,9 +345,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function toggleDynamicFields() {
   const type = document.getElementById('type').value;
+  const incBox = document.getElementById('income-extra-fields');
   const savingsBox = document.getElementById('savings-extra-fields');
   const invBox = document.getElementById('investment-extra-fields');
 
+  incBox.style.display = type === 'income' ? 'block' : 'none';
   savingsBox.style.display = type === 'savings' ? 'block' : 'none';
   invBox.style.display = type === 'investment' ? 'block' : 'none';
 }
@@ -389,8 +405,8 @@ function updateUI() {
     if (t.type === 'income') totalInc += t.amount;
     if (t.type === 'savings') totalLiquidSavings += t.amount;
     if (t.type === 'investment') totalLockedInvestments += t.amount;
-    if (t.type === 'lend') totalLentOut += t.amount; // Money given out that needs to be gotten back
-    if (t.type === 'borrow') totalExp += t.amount; // Borrowed money liability
+    if (t.type === 'lend') totalLentOut += t.amount; // Money given out to get back
+    if (t.type === 'borrow') totalExp += t.amount;
 
     const div = document.createElement('div');
     div.className = `transaction-item ${t.type}`;
@@ -399,8 +415,9 @@ function updateUI() {
     const isOutflow = ['expense', 'lend'].includes(t.type);
     const prefix = isOutflow ? '-' : '+';
     let extraLabel = '';
-    if (t.type === 'savings' && t.savingsGoal) extraLabel = ` • 🎯 ${t.savingsGoal}`;
-    if (t.type === 'investment' && t.invName) extraLabel = ` • 📈 ${t.invName}`;
+    if (t.type === 'income' && t.incomeSource) extraLabel = ` • 📥 ${t.incomeSource}`;
+    if (t.type === 'savings' && t.savingsGoal) extraLabel = ` • 🎯 ${t.savingsGoal} (${t.savingsMode || 'General'})`;
+    if (t.type === 'investment' && t.invName) extraLabel = ` • 📈 ${t.invName} (${t.invMode || 'General'})`;
 
     div.innerHTML = `
       <div class="t-info">
@@ -451,8 +468,9 @@ function handleFormSubmit(e) {
     category: document.getElementById('category').value,
     desc: document.getElementById('desc').value,
     date: document.getElementById('date').value,
+    incomeSource: type === 'income' ? (document.getElementById('income-source').value.trim() || 'General Income') : null,
     savingsGoal: type === 'savings' ? (document.getElementById('savings-goal-name').value.trim() || 'General Savings') : null,
-    savingsMode: type === 'savings' ? (document.getElementById('savings-mode').value.trim() || 'Bank Cash') : null,
+    savingsMode: type === 'savings' ? (document.getElementById('savings-mode').value.trim() || 'Liquid Cash') : null,
     invName: type === 'investment' ? (document.getElementById('inv-name').value.trim() || 'General Investment') : null,
     invMode: type === 'investment' ? (document.getElementById('inv-mode').value.trim() || 'Platform') : null,
   };
@@ -481,8 +499,9 @@ function openDetails(id) {
   document.getElementById('det-meta').innerText = `${t.date} • ${typeTitle} • ${t.category || 'General'}`;
 
   let extraText = '';
-  if (t.savingsGoal) extraText = `Goal: ${t.savingsGoal} (${t.savingsMode || 'Mode Unspecified'})`;
-  if (t.invName) extraText = `Asset: ${t.invName} (${t.invMode || 'Mode Unspecified'})`;
+  if (t.incomeSource) extraText = `Source/Mode: ${t.incomeSource}`;
+  if (t.savingsGoal) extraText = `Goal: ${t.savingsGoal} | Mode: ${t.savingsMode || 'Unspecified'}`;
+  if (t.invName) extraText = `Asset: ${t.invName} | Platform/Mode: ${t.invMode || 'Unspecified'}`;
   document.getElementById('det-extra').innerText = extraText;
 
   openModal('detailsModal');
@@ -497,56 +516,128 @@ function deleteTransaction() {
   }
 }
 
-// Custom Savings & Investments Portfolio Breakdown
+// Complete Financial Breakdown Report Generator
 function openAnalyticsReport() {
   const body = document.getElementById('analytics-report-body');
   if (!body) return;
 
-  const savingsBuckets = {};
-  const investmentHoldings = {};
+  const categoryExpenses = {};
+  const incomeSources = {};
+  const savingsData = {}; // { Purpose: { total: X, modes: { ModeA: Y, ModeB: Z } } }
+  const invData = {};     // { Asset: { total: X, modes: { PlatformA: Y, PlatformB: Z } } }
 
   transactions.forEach(t => {
+    if (t.type === 'expense') {
+      const cat = t.category || 'Uncategorized';
+      categoryExpenses[cat] = (categoryExpenses[cat] || 0) + t.amount;
+    }
+    if (t.type === 'income') {
+      const src = t.incomeSource || 'General Income';
+      incomeSources[src] = (incomeSources[src] || 0) + t.amount;
+    }
     if (t.type === 'savings') {
-      const goalKey = t.savingsGoal || 'General Savings';
-      if (!savingsBuckets[goalKey]) savingsBuckets[goalKey] = { total: 0, mode: t.savingsMode || 'General' };
-      savingsBuckets[goalKey].total += t.amount;
+      const purpose = t.savingsGoal || 'General Savings';
+      const mode = t.savingsMode || 'Liquid Cash';
+      if (!savingsData[purpose]) savingsData[purpose] = { total: 0, modes: {} };
+      savingsData[purpose].total += t.amount;
+      savingsData[purpose].modes[mode] = (savingsData[purpose].modes[mode] || 0) + t.amount;
     }
     if (t.type === 'investment') {
-      const invKey = t.invName || 'General Investment';
-      if (!investmentHoldings[invKey]) investmentHoldings[invKey] = { total: 0, mode: t.invMode || 'General' };
-      investmentHoldings[invKey].total += t.amount;
+      const purpose = t.invName || 'General Investment';
+      const mode = t.invMode || 'Platform';
+      if (!invData[purpose]) invData[purpose] = { total: 0, modes: {} };
+      invData[purpose].total += t.amount;
+      invData[purpose].modes[mode] = (invData[purpose].modes[mode] || 0) + t.amount;
     }
   });
 
-  let html = `<h4 style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">🎯 Savings Goals & Buckets</h4>`;
+  let html = '';
 
-  if (Object.keys(savingsBuckets).length === 0) {
-    html += '<div class="tracker-card"><p>No custom savings buckets logged yet.</p></div>';
+  // 1. Expense Breakdown by Category
+  html += `<div class="report-section"><h4>💸 Expense Breakdown by Category</h4>`;
+  if (Object.keys(categoryExpenses).length === 0) {
+    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No expenses recorded yet.</p></div>';
   } else {
-    Object.entries(savingsBuckets).forEach(([goal, data]) => {
+    Object.entries(categoryExpenses).forEach(([cat, val]) => {
       html += `
         <div class="tracker-card">
-          <h5><span>${escapeHtml(goal)}</span> <span class="tracker-amt">₹${data.total.toFixed(2)}</span></h5>
-          <p>Mode/Account: ${escapeHtml(data.mode)}</p>
+          <h5><span>${escapeHtml(cat)}</span> <span class="tracker-amt" style="color:var(--danger)">₹${val.toFixed(2)}</span></h5>
         </div>
       `;
     });
   }
+  html += `</div>`;
 
-  html += `<h4 style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; margin:16px 0 10px 0;">📈 Custom Investment Assets</h4>`;
-
-  if (Object.keys(investmentHoldings).length === 0) {
-    html += '<div class="tracker-card"><p>No individual investments logged yet.</p></div>';
+  // 2. Income Breakdown by Source/Mode
+  html += `<div class="report-section"><h4>📥 Income Breakdown by Source</h4>`;
+  if (Object.keys(incomeSources).length === 0) {
+    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No income recorded yet.</p></div>';
   } else {
-    Object.entries(investmentHoldings).forEach(([inv, data]) => {
+    Object.entries(incomeSources).forEach(([src, val]) => {
       html += `
         <div class="tracker-card">
-          <h5><span>${escapeHtml(inv)}</span> <span class="tracker-amt" style="color:var(--purple);">₹${data.total.toFixed(2)}</span></h5>
-          <p>Platform/Instrument: ${escapeHtml(data.mode)}</p>
+          <h5><span>${escapeHtml(src)}</span> <span class="tracker-amt" style="color:var(--success)">₹${val.toFixed(2)}</span></h5>
         </div>
       `;
     });
   }
+  html += `</div>`;
+
+  // 3. Savings Purpose & Mode Breakdown
+  html += `<div class="report-section"><h4>🎯 Savings Saved by Purpose & Mode</h4>`;
+  if (Object.keys(savingsData).length === 0) {
+    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No custom savings entries logged yet.</p></div>';
+  } else {
+    Object.entries(savingsData).forEach(([purpose, pData]) => {
+      let modeListHtml = '';
+      Object.entries(pData.modes).forEach(([mode, mVal]) => {
+        modeListHtml += `
+          <div class="mode-breakdown-item">
+            <span>Mode: ${escapeHtml(mode)}</span>
+            <span class="mode-val">₹${mVal.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="tracker-card">
+          <h5><span>${escapeHtml(purpose)}</span> <span class="tracker-amt" style="color:var(--info)">₹${pData.total.toFixed(2)}</span></h5>
+          <div class="mode-breakdown-list">
+            ${modeListHtml}
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+
+  // 4. Investment Purpose & Mode Breakdown
+  html += `<div class="report-section"><h4>📈 Investment Assets & Platform Breakdown</h4>`;
+  if (Object.keys(invData).length === 0) {
+    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No investments logged yet.</p></div>';
+  } else {
+    Object.entries(invData).forEach(([purpose, pData]) => {
+      let modeListHtml = '';
+      Object.entries(pData.modes).forEach(([mode, mVal]) => {
+        modeListHtml += `
+          <div class="mode-breakdown-item">
+            <span>Platform/Mode: ${escapeHtml(mode)}</span>
+            <span class="mode-val">₹${mVal.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="tracker-card">
+          <h5><span>${escapeHtml(purpose)}</span> <span class="tracker-amt" style="color:var(--purple)">₹${pData.total.toFixed(2)}</span></h5>
+          <div class="mode-breakdown-list">
+            ${modeListHtml}
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
 
   body.innerHTML = html;
   openModal('analyticsModal');
@@ -559,4 +650,3 @@ function escapeHtml(str) {
 </script>
 </body>
 </html>
-
