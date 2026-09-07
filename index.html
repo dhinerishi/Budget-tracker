@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Kanakkupulla — Smart Financial Ledger</title>
+
+<!-- PWA and Web App Meta Tags -->
+<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Kanakkupulla%22,%22short_name%22:%22Kanakkupulla%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23f8fafc%22,%22theme_color%22:%22%234f46e5%22}">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kanakkupulla">
+
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='28' fill='%234f46e5'/%3E%3Cpath d='M30 25h45a5 5 0 0 1 5 5v40a5 5 0 0 1-5 5H30a5 5 0 0 1-5-5V30a5 5 0 0 1 5-5z' fill='none' stroke='white' stroke-width='6'/%3E%3Cpath d='M25 38h55M45 25v50' stroke='%2334d399' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='62' cy='55' r='6' fill='%23fbbf24'/%3E%3C/svg%3E">
 
 <style>
@@ -100,12 +108,10 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 .inline-input-box { display: flex; gap: 6px; }
 .add-inline-btn { width: 44px; height: 44px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px; font-size: 1.2rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 
-/* Category / Mode Management List Styles */
 .manage-list-box { background: var(--bg-subcard); padding: 10px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 14px; max-height: 180px; overflow-y: auto; }
 .manage-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 6px; font-size: 0.85rem; font-weight: 700; }
 .btn-del-chip { background: #ffe4e6; color: var(--danger); border: 1px solid #fecdd3; width: 26px; height: 26px; border-radius: 13px; font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-/* Report & Progress Bar Styles */
 .date-filter-box { background: var(--bg-subcard); padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: flex-end; }
 .date-filter-box .form-group { margin-bottom: 0; }
 .btn-filter { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; height: 42px; }
@@ -352,7 +358,7 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
       <button class="close-btn" id="close-analytics-modal">&times;</button>
     </div>
 
-    <!-- Date Range Selection (Initially set to whole current month) -->
+    <!-- Date Range Selection -->
     <div class="date-filter-box">
       <div class="form-group">
         <label>From Date</label>
@@ -425,7 +431,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-delete-record').onclick = deleteTransaction;
   document.getElementById('btn-apply-report-filter').onclick = generateReport;
 
-  // Math Evaluator Listener
   const amountField = document.getElementById('amount');
   const mathHint = document.getElementById('math-hint');
   const mathEvalVal = document.getElementById('math-eval-val');
@@ -446,7 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 });
 
-// Helper: Format Date YYYY-MM-DD
 function formatDateString(d) {
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -454,7 +458,6 @@ function formatDateString(d) {
   return `${year}-${month}-${day}`;
 }
 
-// Automatically set filter dates to Current Whole Month
 function setDefaultReportDates() {
   const now = new Date();
   const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -489,7 +492,6 @@ function populateDropdowns(selectedCat = null, selectedMode = null) {
   if (selectedMode) modeSelect.value = selectedMode;
 }
 
-// Manage Categories & Modes Handlers
 function renderManageLists() {
   const catList = document.getElementById('manage-cat-list');
   const modeList = document.getElementById('manage-mode-list');
@@ -760,7 +762,6 @@ function deleteTransaction() {
   }
 }
 
-// Generate Complete Financial Report
 function generateReport() {
   const body = document.getElementById('analytics-report-body');
   if (!body) return;
@@ -825,7 +826,6 @@ function generateReport() {
     </div>
   `;
 
-  // 1. Expense Categories & Budget Limit Status
   html += `<div class="report-section"><h4>💸 Expense Breakdown & Budget Limits</h4>`;
   if (Object.keys(categoryExpenses).length === 0) {
     html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No expenses recorded for selected range.</p></div>';
@@ -865,7 +865,6 @@ function generateReport() {
   }
   html += `</div>`;
 
-  // 2. Savings Goal Achievement Breakdown
   html += `<div class="report-section"><h4>🎯 Savings Goals & Achievement %</h4>`;
   if (Object.keys(categorySavings).length === 0) {
     html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No savings logged for selected range.</p></div>';
@@ -905,7 +904,6 @@ function generateReport() {
   }
   html += `</div>`;
 
-  // 3. Investment Portfolio Breakdown
   html += `<div class="report-section"><h4>📈 Investment Assets & Modes</h4>`;
   if (Object.keys(categoryInvestments).length === 0) {
     html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No investments logged for selected range.</p></div>';
@@ -933,7 +931,6 @@ function generateReport() {
   }
   html += `</div>`;
 
-  // 4. Income Sources
   html += `<div class="report-section"><h4>📥 Income Sources</h4>`;
   if (Object.keys(incomeSources).length === 0) {
     html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No income logged for selected range.</p></div>';
