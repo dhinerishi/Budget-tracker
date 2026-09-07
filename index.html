@@ -12,7 +12,7 @@
   --bg-card: #ffffff;
   --bg-subcard: #f1f5f9;
   --primary: #4f46e5;
-  --primary-glow: rgba(79, 70, 229, 0.2);
+  --primary-glow: rgba(79, 70, 229, 0.15);
   --success: #059669;
   --danger: #e11d48;
   --warning: #d97706;
@@ -39,20 +39,21 @@ header { padding: 16px 20px; background: rgba(255, 255, 255, 0.9); backdrop-filt
 .balance-card h2 { font-size: 2.2rem; margin: 4px 0 12px 0; font-weight: 800; letter-spacing: -1px; }
 
 .fund-split-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; background: rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); }
-.fund-split-item small { font-size: 0.65rem; opacity: 0.85; text-transform: uppercase; display: block; font-weight: 700; }
-.fund-split-item strong { font-size: 0.9rem; font-weight: 700; }
+.fund-split-item small { font-size: 0.62rem; opacity: 0.85; text-transform: uppercase; display: block; font-weight: 700; }
+.fund-split-item strong { font-size: 0.88rem; font-weight: 700; }
 .fund-split-item.liquid strong { color: #6ee7b7; }
 .fund-split-item.locked strong { color: #e9d5ff; }
 .fund-split-item.receivable strong { color: #fde047; }
 
-.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
 .summary-box { background: var(--bg-card); border: 1px solid var(--border); padding: 12px 14px; border-radius: var(--radius); box-shadow: var(--shadow); }
 .summary-box h4 { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 700; }
 .summary-box p { font-size: 1.1rem; font-weight: 800; }
 .summary-box.income p { color: var(--success); }
 .summary-box.expense p { color: var(--danger); }
 
-.analytics-trigger-btn { width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 13px; border-radius: var(--radius); font-weight: 700; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: var(--shadow); }
+.dash-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.dash-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 12px 10px; border-radius: var(--radius); font-weight: 700; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: var(--shadow); }
 
 .section-title-wrapper { display: flex; justify-content: space-between; align-items: center; margin: 20px 20px 10px 20px; }
 .section-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
@@ -70,6 +71,7 @@ header { padding: 16px 20px; background: rgba(255, 255, 255, 0.9); backdrop-filt
 .t-info h4 { font-size: 0.9rem; margin-bottom: 3px; font-weight: 700; color: var(--text-main); }
 .t-info p { font-size: 0.72rem; color: var(--text-muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .badge { background: #f1f5f9; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; color: var(--text-muted); border: 1px solid var(--border); font-weight: 600; }
+.badge-mode { background: #e0e7ff; color: #3730a3; border-color: #c7d2fe; }
 .t-amount { font-weight: 800; font-size: 1rem; }
 .t-amount.expense { color: var(--danger); }
 .t-amount.income { color: var(--success); }
@@ -94,18 +96,45 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 .btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, #4f46e5, #4338ca); color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 6px; box-shadow: 0 6px 16px var(--primary-glow); }
 .btn-danger { background: var(--danger); box-shadow: 0 6px 16px rgba(225, 29, 72, 0.2); }
 
-.inline-cat-box { display: flex; gap: 6px; }
-.add-inline-cat-btn { width: 44px; height: 44px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px; font-size: 1.2rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.inline-input-box { display: flex; gap: 6px; }
+.add-inline-btn { width: 44px; height: 44px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px; font-size: 1.2rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+
+/* Report & Progress Bar Styles */
+.date-filter-box { background: var(--bg-subcard); padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: flex-end; }
+.date-filter-box .form-group { margin-bottom: 0; }
+.btn-filter { padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; height: 42px; }
+
+.visual-pie-bar-wrapper { margin-bottom: 16px; background: var(--bg-subcard); padding: 14px; border-radius: var(--radius); border: 1px solid var(--border); }
+.visual-pie-bar-title { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+.multi-segment-bar { height: 16px; width: 100%; background: #e2e8f0; border-radius: 8px; overflow: hidden; display: flex; margin-bottom: 10px; }
+.segment { height: 100%; }
+.segment-exp { background: var(--danger); }
+.segment-sav { background: var(--info); }
+.segment-inv { background: var(--purple); }
+
+.chart-legend { display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 700; }
+.legend-item { display: flex; align-items: center; gap: 4px; }
+.dot { width: 8px; height: 8px; border-radius: 4px; display: inline-block; }
 
 .report-section { margin-bottom: 18px; }
 .report-section h4 { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; font-weight: 800; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
 
-.tracker-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 8px; }
-.tracker-card h5 { font-size: 0.88rem; font-weight: 800; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.tracker-amt { font-size: 0.95rem; font-weight: 800; color: var(--primary); }
+.tracker-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+.tracker-card h5 { font-size: 0.88rem; font-weight: 800; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.tracker-amt { font-size: 0.92rem; font-weight: 800; }
 
-.mode-breakdown-list { margin-top: 6px; border-top: 1px dashed var(--border); padding-top: 6px; }
-.mode-breakdown-item { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-muted); padding: 2px 0; font-weight: 600; }
+.progress-track { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 6px 0 4px 0; }
+.progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+.fill-success { background: var(--success); }
+.fill-warning { background: var(--warning); }
+.fill-danger { background: var(--danger); }
+.fill-info { background: var(--info); }
+.fill-purple { background: var(--purple); }
+
+.tracker-meta-text { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+
+.mode-breakdown-list { margin-top: 8px; border-top: 1px dashed var(--border); padding-top: 6px; }
+.mode-breakdown-item { display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--text-muted); padding: 2px 0; font-weight: 600; }
 .mode-breakdown-item span.mode-val { color: var(--text-main); font-weight: 700; }
 
 .empty-state { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 0.85rem; line-height: 1.5; }
@@ -160,9 +189,10 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
       </div>
     </div>
 
-    <button class="analytics-trigger-btn" id="btn-open-analytics">
-      📊 View Detailed Complete Financial Report
-    </button>
+    <div class="dash-actions-row">
+      <button class="dash-btn" id="btn-open-analytics">📊 View Detailed Report</button>
+      <button class="dash-btn" id="btn-open-limits">🎯 Set Category Limits</button>
+    </div>
   </div>
 
   <div class="section-title-wrapper">
@@ -191,7 +221,7 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
       <div class="form-group">
         <label>Type</label>
         <select id="type" class="form-control">
-          <option value="expense">Regular Expense / Bill</option>
+          <option value="expense">Expense / Bill</option>
           <option value="income">Income / Credit</option>
           <option value="savings">Savings (Goal / Bucket)</option>
           <option value="investment">Investment (Asset / Stocks / FD)</option>
@@ -200,49 +230,25 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
         </select>
       </div>
 
-      <!-- Income Extra Field: Mode/Source -->
-      <div id="income-extra-fields" style="display:none;">
-        <div class="form-group">
-          <label>Income Mode / Source</label>
-          <input type="text" id="income-source" class="form-control" placeholder="e.g. Salary Account, Freelance Client, Cash">
-        </div>
-      </div>
-
-      <!-- Dynamic Extra Fields for Custom Savings -->
-      <div id="savings-extra-fields" style="display:none;">
-        <div class="form-group">
-          <label>Savings Purpose / Goal Name</label>
-          <input type="text" id="savings-goal-name" class="form-control" placeholder="e.g. Emergency Fund, New Scooter">
-        </div>
-        <div class="form-group">
-          <label>Saving Mode / Account for this entry</label>
-          <input type="text" id="savings-mode" class="form-control" placeholder="e.g. Liquid Cash, RD, HDFC Auto-Sweep">
-        </div>
-      </div>
-
-      <!-- Dynamic Extra Fields for Custom Investment -->
-      <div id="investment-extra-fields" style="display:none;">
-        <div class="form-group">
-          <label>Investment Purpose / Asset Name</label>
-          <input type="text" id="inv-name" class="form-control" placeholder="e.g. Nifty 50 Index, SGB Gold, Child Education">
-        </div>
-        <div class="form-group">
-          <label>Investment Mode / Platform for this entry</label>
-          <input type="text" id="inv-mode" class="form-control" placeholder="e.g. Zerodha, Groww, Post Office, SIP">
+      <div class="form-group">
+        <label id="lbl-category">Category / Purpose / Goal</label>
+        <div class="inline-input-box">
+          <select id="category" class="form-control"></select>
+          <button type="button" class="add-inline-btn" id="btn-quick-cat" title="Add New Category">+</button>
         </div>
       </div>
 
       <div class="form-group">
-        <label>Category</label>
-        <div class="inline-cat-box">
-          <select id="category" class="form-control"></select>
-          <button type="button" class="add-inline-cat-btn" id="btn-quick-cat" title="Add New Category">+</button>
+        <label id="lbl-mode">Mode of Payment / Account</label>
+        <div class="inline-input-box">
+          <select id="payment-mode" class="form-control"></select>
+          <button type="button" class="add-inline-btn" id="btn-quick-mode" title="Add New Mode">+</button>
         </div>
       </div>
 
       <div class="form-group">
         <label>Title / Note</label>
-        <input type="text" id="desc" class="form-control" required placeholder="e.g. Monthly Savings, Groceries, Loan to Friend">
+        <input type="text" id="desc" class="form-control" required placeholder="e.g. Monthly RD, Groceries, Loan to Friend">
       </div>
 
       <div class="form-group">
@@ -252,6 +258,32 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 
       <button type="submit" class="btn-primary">Save Entry</button>
     </form>
+  </div>
+</div>
+
+<!-- Category Limits & Goals Target Modal -->
+<div class="modal" id="limitsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span>Category Budget Limits & Goals</span>
+      <button class="close-btn" id="close-limits-modal">&times;</button>
+    </div>
+    <form id="limits-form">
+      <div class="form-group">
+        <label>Select Category / Goal</label>
+        <select id="limit-category-select" class="form-control"></select>
+      </div>
+      <div class="form-group">
+        <label>Target Amount / Max Budget Limit (₹)</label>
+        <input type="number" id="limit-target-amount" class="form-control" placeholder="e.g. 50000" required min="1">
+      </div>
+      <button type="submit" class="btn-primary">Save Budget / Goal Target</button>
+    </form>
+
+    <div style="margin-top: 20px;">
+      <h4 style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px; font-weight:800;">Configured Limits / Goals</h4>
+      <div id="configured-limits-list"></div>
+    </div>
   </div>
 </div>
 
@@ -272,34 +304,56 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
   </div>
 </div>
 
-<!-- Portfolio Breakdown Modal -->
+<!-- Complete Financial Report Modal -->
 <div class="modal" id="analyticsModal">
   <div class="modal-content" style="max-height:85vh;">
     <div class="modal-header">
       <span>Complete Financial Report</span>
       <button class="close-btn" id="close-analytics-modal">&times;</button>
     </div>
+
+    <!-- Date Range Selection -->
+    <div class="date-filter-box">
+      <div class="form-group">
+        <label>From Date</label>
+        <input type="date" id="report-from-date" class="form-control" style="padding:8px; font-size:0.8rem;">
+      </div>
+      <div class="form-group">
+        <label>To Date</label>
+        <input type="date" id="report-to-date" class="form-control" style="padding:8px; font-size:0.8rem;">
+      </div>
+      <button type="button" class="btn-filter" id="btn-apply-report-filter">Filter</button>
+    </div>
+
     <div id="analytics-report-body"></div>
   </div>
 </div>
 
 <script>
 let transactions = [];
-let categories = ['Food & Dining', 'Groceries', 'Utilities & Bills', 'Rent', 'Shopping', 'Transport', 'Salary & Income', 'Liquid Savings', 'Investments', 'Lending/Receivable', 'Miscellaneous'];
+let categories = ['Food & Dining', 'Groceries', 'Utilities & Bills', 'Rent', 'Shopping', 'Transport', 'Salary', 'Emergency Fund', 'New Bike', 'Child Savings', 'Stocks & Mutual Funds', 'Miscellaneous'];
+let modes = ['Liquid Cash', 'HDFC Bank', 'UPI', 'Recurring Deposit (RD)', 'Fixed Deposit (FD)', 'Zerodha', 'Groww', 'Post Office'];
+let categoryLimits = {}; // { 'Food & Dining': 5000, 'Emergency Fund': 100000 }
 
 try {
-  const saved = localStorage.getItem('native_tracker_data');
+  const saved = localStorage.getItem('kanakkupulla_data');
   if (saved) transactions = JSON.parse(saved);
-  const savedCats = localStorage.getItem('native_tracker_cats');
+  const savedCats = localStorage.getItem('kanakkupulla_cats');
   if (savedCats) categories = JSON.parse(savedCats);
+  const savedModes = localStorage.getItem('kanakkupulla_modes');
+  if (savedModes) modes = JSON.parse(savedModes);
+  const savedLimits = localStorage.getItem('kanakkupulla_limits');
+  if (savedLimits) categoryLimits = JSON.parse(savedLimits);
 } catch(e) { transactions = []; }
 
 let currentViewId = null;
 
 function saveData() {
   try {
-    localStorage.setItem('native_tracker_data', JSON.stringify(transactions));
-    localStorage.setItem('native_tracker_cats', JSON.stringify(categories));
+    localStorage.setItem('kanakkupulla_data', JSON.stringify(transactions));
+    localStorage.setItem('kanakkupulla_cats', JSON.stringify(categories));
+    localStorage.setItem('kanakkupulla_modes', JSON.stringify(modes));
+    localStorage.setItem('kanakkupulla_limits', JSON.stringify(categoryLimits));
   } catch(e) {}
 }
 
@@ -307,22 +361,26 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('date').valueAsDate = new Date();
 
   updateUI();
-  populateCategoryDropdown();
+  populateDropdowns();
 
   document.getElementById('fab-add').onclick = () => openModal('addModal');
   document.getElementById('close-add-modal').onclick = () => closeModal('addModal');
   document.getElementById('close-details-modal').onclick = () => closeModal('detailsModal');
   document.getElementById('close-analytics-modal').onclick = () => closeModal('analyticsModal');
-  document.getElementById('btn-open-analytics').onclick = openAnalyticsReport;
+  document.getElementById('close-limits-modal').onclick = () => closeModal('limitsModal');
+
+  document.getElementById('btn-open-analytics').onclick = () => { generateReport(); openModal('analyticsModal'); };
+  document.getElementById('btn-open-limits').onclick = () => { renderConfiguredLimits(); openModal('limitsModal'); };
 
   document.getElementById('btn-quick-cat').onclick = handleQuickAddCategory;
+  document.getElementById('btn-quick-mode').onclick = handleQuickAddMode;
+
   document.getElementById('add-form').onsubmit = handleFormSubmit;
+  document.getElementById('limits-form').onsubmit = handleLimitSubmit;
   document.getElementById('btn-delete-record').onclick = deleteTransaction;
+  document.getElementById('btn-apply-report-filter').onclick = generateReport;
 
-  const typeSelect = document.getElementById('type');
-  typeSelect.onchange = toggleDynamicFields;
-
-  // Amount Math Evaluator & Numeric Input Listener
+  // Amount Math Evaluator Listener
   const amountField = document.getElementById('amount');
   const mathHint = document.getElementById('math-hint');
   const mathEvalVal = document.getElementById('math-eval-val');
@@ -343,42 +401,92 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 });
 
-function toggleDynamicFields() {
-  const type = document.getElementById('type').value;
-  const incBox = document.getElementById('income-extra-fields');
-  const savingsBox = document.getElementById('savings-extra-fields');
-  const invBox = document.getElementById('investment-extra-fields');
+function populateDropdowns(selectedCat = null, selectedMode = null) {
+  const catSelect = document.getElementById('category');
+  const limitCatSelect = document.getElementById('limit-category-select');
+  const modeSelect = document.getElementById('payment-mode');
 
-  incBox.style.display = type === 'income' ? 'block' : 'none';
-  savingsBox.style.display = type === 'savings' ? 'block' : 'none';
-  invBox.style.display = type === 'investment' ? 'block' : 'none';
-}
+  catSelect.innerHTML = '';
+  limitCatSelect.innerHTML = '';
+  modeSelect.innerHTML = '';
 
-function populateCategoryDropdown(selectedCat = null) {
-  const select = document.getElementById('category');
-  if (!select) return;
-  select.innerHTML = '';
   categories.forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.innerText = cat;
-    select.appendChild(opt);
+    const opt1 = document.createElement('option'); opt1.value = cat; opt1.innerText = cat;
+    const opt2 = document.createElement('option'); opt2.value = cat; opt2.innerText = cat;
+    catSelect.appendChild(opt1);
+    limitCatSelect.appendChild(opt2);
   });
-  if (selectedCat) select.value = selectedCat;
+
+  modes.forEach(m => {
+    const opt = document.createElement('option'); opt.value = m; opt.innerText = m;
+    modeSelect.appendChild(opt);
+  });
+
+  if (selectedCat) catSelect.value = selectedCat;
+  if (selectedMode) modeSelect.value = selectedMode;
 }
 
 function handleQuickAddCategory() {
-  const newCat = prompt("Enter new category name:");
+  const newCat = prompt("Enter new category / saving goal name:");
   if (newCat && newCat.trim() !== "") {
     const cleanCat = newCat.trim();
     if (!categories.includes(cleanCat)) {
       categories.push(cleanCat);
       saveData();
-      populateCategoryDropdown(cleanCat);
+      populateDropdowns(cleanCat, null);
     } else {
       document.getElementById('category').value = cleanCat;
     }
   }
+}
+
+function handleQuickAddMode() {
+  const newMode = prompt("Enter new payment / saving mode (e.g., HDFC Auto-Sweep, Cash, RD):");
+  if (newMode && newMode.trim() !== "") {
+    const cleanMode = newMode.trim();
+    if (!modes.includes(cleanMode)) {
+      modes.push(cleanMode);
+      saveData();
+      populateDropdowns(null, cleanMode);
+    } else {
+      document.getElementById('payment-mode').value = cleanMode;
+    }
+  }
+}
+
+function handleLimitSubmit(e) {
+  e.preventDefault();
+  const cat = document.getElementById('limit-category-select').value;
+  const amt = parseFloat(document.getElementById('limit-target-amount').value) || 0;
+
+  if (amt > 0) {
+    categoryLimits[cat] = amt;
+    saveData();
+    renderConfiguredLimits();
+    document.getElementById('limit-target-amount').value = '';
+    alert(`Target/Limit of ₹${amt.toFixed(2)} set for "${cat}"`);
+  }
+}
+
+function renderConfiguredLimits() {
+  const box = document.getElementById('configured-limits-list');
+  box.innerHTML = '';
+  if (Object.keys(categoryLimits).length === 0) {
+    box.innerHTML = '<p style="font-size:0.75rem; color:var(--text-muted)">No category limits or goals set yet.</p>';
+    return;
+  }
+  Object.entries(categoryLimits).forEach(([cat, val]) => {
+    const div = document.createElement('div');
+    div.className = 'tracker-card';
+    div.style.padding = '8px 12px';
+    div.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.8rem; font-weight:700;">${escapeHtml(cat)}</span>
+        <span style="font-size:0.85rem; font-weight:800; color:var(--primary)">₹${val.toFixed(2)}</span>
+      </div>
+    `;
+    box.appendChild(div);
+  });
 }
 
 function updateUI() {
@@ -405,7 +513,7 @@ function updateUI() {
     if (t.type === 'income') totalInc += t.amount;
     if (t.type === 'savings') totalLiquidSavings += t.amount;
     if (t.type === 'investment') totalLockedInvestments += t.amount;
-    if (t.type === 'lend') totalLentOut += t.amount; // Money given out to get back
+    if (t.type === 'lend') totalLentOut += t.amount;
     if (t.type === 'borrow') totalExp += t.amount;
 
     const div = document.createElement('div');
@@ -414,15 +522,15 @@ function updateUI() {
 
     const isOutflow = ['expense', 'lend'].includes(t.type);
     const prefix = isOutflow ? '-' : '+';
-    let extraLabel = '';
-    if (t.type === 'income' && t.incomeSource) extraLabel = ` • 📥 ${t.incomeSource}`;
-    if (t.type === 'savings' && t.savingsGoal) extraLabel = ` • 🎯 ${t.savingsGoal} (${t.savingsMode || 'General'})`;
-    if (t.type === 'investment' && t.invName) extraLabel = ` • 📈 ${t.invName} (${t.invMode || 'General'})`;
 
     div.innerHTML = `
       <div class="t-info">
         <h4>${escapeHtml(t.desc)}</h4>
-        <p><span>${t.date}</span><span class="badge">${escapeHtml(t.category || 'General')}</span><span>${escapeHtml(extraLabel)}</span></p>
+        <p>
+          <span>${t.date}</span>
+          <span class="badge">${escapeHtml(t.category || 'General')}</span>
+          <span class="badge badge-mode">💳 ${escapeHtml(t.mode || 'Cash')}</span>
+        </p>
       </div>
       <div class="t-amount ${t.type}">${prefix}₹${t.amount.toFixed(2)}</div>
     `;
@@ -440,12 +548,8 @@ function updateUI() {
   expenseEl.innerText = `₹${totalExp.toFixed(2)}`;
 }
 
-function openModal(id) {
-  document.getElementById(id).style.display = 'flex';
-}
-function closeModal(id) {
-  document.getElementById(id).style.display = 'none';
-}
+function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
 function handleFormSubmit(e) {
   e.preventDefault();
@@ -466,13 +570,9 @@ function handleFormSubmit(e) {
     amount: finalAmount,
     type: type,
     category: document.getElementById('category').value,
+    mode: document.getElementById('payment-mode').value,
     desc: document.getElementById('desc').value,
-    date: document.getElementById('date').value,
-    incomeSource: type === 'income' ? (document.getElementById('income-source').value.trim() || 'General Income') : null,
-    savingsGoal: type === 'savings' ? (document.getElementById('savings-goal-name').value.trim() || 'General Savings') : null,
-    savingsMode: type === 'savings' ? (document.getElementById('savings-mode').value.trim() || 'Liquid Cash') : null,
-    invName: type === 'investment' ? (document.getElementById('inv-name').value.trim() || 'General Investment') : null,
-    invMode: type === 'investment' ? (document.getElementById('inv-mode').value.trim() || 'Platform') : null,
+    date: document.getElementById('date').value
   };
 
   transactions.push(newRecord);
@@ -481,7 +581,6 @@ function handleFormSubmit(e) {
   document.getElementById('add-form').reset();
   document.getElementById('date').valueAsDate = new Date();
   document.getElementById('math-hint').style.display = 'none';
-  toggleDynamicFields();
   closeModal('addModal');
   updateUI();
 }
@@ -496,13 +595,8 @@ function openDetails(id) {
   
   let typeTitle = t.type.toUpperCase();
   if (t.type === 'lend') typeTitle = 'LENDING (MONEY OWED TO YOU)';
-  document.getElementById('det-meta').innerText = `${t.date} • ${typeTitle} • ${t.category || 'General'}`;
-
-  let extraText = '';
-  if (t.incomeSource) extraText = `Source/Mode: ${t.incomeSource}`;
-  if (t.savingsGoal) extraText = `Goal: ${t.savingsGoal} | Mode: ${t.savingsMode || 'Unspecified'}`;
-  if (t.invName) extraText = `Asset: ${t.invName} | Platform/Mode: ${t.invMode || 'Unspecified'}`;
-  document.getElementById('det-extra').innerText = extraText;
+  document.getElementById('det-meta').innerText = `${t.date} • ${typeTitle}`;
+  document.getElementById('det-extra').innerText = `Category/Goal: ${t.category} | Mode: ${t.mode || 'Liquid Cash'}`;
 
   openModal('detailsModal');
 }
@@ -516,62 +610,183 @@ function deleteTransaction() {
   }
 }
 
-// Complete Financial Breakdown Report Generator
-function openAnalyticsReport() {
+// Generate Complete Financial Report with Percentages, Limits & Visual Pie/Bar
+function generateReport() {
   const body = document.getElementById('analytics-report-body');
   if (!body) return;
 
-  const categoryExpenses = {};
-  const incomeSources = {};
-  const savingsData = {}; // { Purpose: { total: X, modes: { ModeA: Y, ModeB: Z } } }
-  const invData = {};     // { Asset: { total: X, modes: { PlatformA: Y, PlatformB: Z } } }
+  const fromDate = document.getElementById('report-from-date').value;
+  const toDate = document.getElementById('report-to-date').value;
 
-  transactions.forEach(t => {
+  let filtered = [...transactions];
+  if (fromDate) filtered = filtered.filter(t => t.date >= fromDate);
+  if (toDate) filtered = filtered.filter(t => t.date <= toDate);
+
+  let totalExp = 0, totalInc = 0, totalSav = 0, totalInv = 0;
+  const categoryExpenses = {};
+  const categorySavings = {}; // { GoalCategory: { total: X, modes: { ModeA: Y } } }
+  const categoryInvestments = {}; // { AssetCategory: { total: X, modes: { ModeA: Y } } }
+  const incomeSources = {};
+
+  filtered.forEach(t => {
     if (t.type === 'expense') {
-      const cat = t.category || 'Uncategorized';
-      categoryExpenses[cat] = (categoryExpenses[cat] || 0) + t.amount;
+      totalExp += t.amount;
+      categoryExpenses[t.category] = (categoryExpenses[t.category] || 0) + t.amount;
     }
     if (t.type === 'income') {
-      const src = t.incomeSource || 'General Income';
+      totalInc += t.amount;
+      const src = t.mode || 'General Income';
       incomeSources[src] = (incomeSources[src] || 0) + t.amount;
     }
     if (t.type === 'savings') {
-      const purpose = t.savingsGoal || 'General Savings';
-      const mode = t.savingsMode || 'Liquid Cash';
-      if (!savingsData[purpose]) savingsData[purpose] = { total: 0, modes: {} };
-      savingsData[purpose].total += t.amount;
-      savingsData[purpose].modes[mode] = (savingsData[purpose].modes[mode] || 0) + t.amount;
+      totalSav += t.amount;
+      if (!categorySavings[t.category]) categorySavings[t.category] = { total: 0, modes: {} };
+      categorySavings[t.category].total += t.amount;
+      const mode = t.mode || 'Liquid Cash';
+      categorySavings[t.category].modes[mode] = (categorySavings[t.category].modes[mode] || 0) + t.amount;
     }
     if (t.type === 'investment') {
-      const purpose = t.invName || 'General Investment';
-      const mode = t.invMode || 'Platform';
-      if (!invData[purpose]) invData[purpose] = { total: 0, modes: {} };
-      invData[purpose].total += t.amount;
-      invData[purpose].modes[mode] = (invData[purpose].modes[mode] || 0) + t.amount;
+      totalInv += t.amount;
+      if (!categoryInvestments[t.category]) categoryInvestments[t.category] = { total: 0, modes: {} };
+      categoryInvestments[t.category].total += t.amount;
+      const mode = t.mode || 'Platform';
+      categoryInvestments[t.category].modes[mode] = (categoryInvestments[t.category].modes[mode] || 0) + t.amount;
     }
   });
 
-  let html = '';
+  const totalOutflowAndAssets = totalExp + totalSav + totalInv;
+  const expPct = totalOutflowAndAssets > 0 ? ((totalExp / totalOutflowAndAssets) * 100).toFixed(1) : 0;
+  const savPct = totalOutflowAndAssets > 0 ? ((totalSav / totalOutflowAndAssets) * 100).toFixed(1) : 0;
+  const invPct = totalOutflowAndAssets > 0 ? ((totalInv / totalOutflowAndAssets) * 100).toFixed(1) : 0;
 
-  // 1. Expense Breakdown by Category
-  html += `<div class="report-section"><h4>💸 Expense Breakdown by Category</h4>`;
+  let html = `
+    <div class="visual-pie-bar-wrapper">
+      <div class="visual-pie-bar-title">Financial Flow Proportion</div>
+      <div class="multi-segment-bar">
+        <div class="segment segment-exp" style="width: ${expPct}%;"></div>
+        <div class="segment segment-sav" style="width: ${savPct}%;"></div>
+        <div class="segment segment-inv" style="width: ${invPct}%;"></div>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="dot" style="background:var(--danger)"></span> Expense: ${expPct}%</div>
+        <div class="legend-item"><span class="dot" style="background:var(--info)"></span> Savings: ${savPct}%</div>
+        <div class="legend-item"><span class="dot" style="background:var(--purple)"></span> Investment: ${invPct}%</div>
+      </div>
+    </div>
+  `;
+
+  // 1. Expense Categories & Budget Limit Status
+  html += `<div class="report-section"><h4>💸 Expense Breakdown & Budget Limits</h4>`;
   if (Object.keys(categoryExpenses).length === 0) {
-    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No expenses recorded yet.</p></div>';
+    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No expenses recorded for selected range.</p></div>';
   } else {
-    Object.entries(categoryExpenses).forEach(([cat, val]) => {
+    Object.entries(categoryExpenses).forEach(([cat, spent]) => {
+      const limit = categoryLimits[cat] || 0;
+      let pct = limit > 0 ? (spent / limit) * 100 : 0;
+      let fillClass = 'fill-success';
+      let statusBadge = '';
+
+      if (limit > 0) {
+        if (pct > 100) {
+          fillClass = 'fill-danger';
+          statusBadge = `<span style="color:var(--danger); font-size:0.7rem; font-weight:800;">⚠️ Exceeded by ₹${(spent - limit).toFixed(2)}</span>`;
+        } else {
+          statusBadge = `<span style="color:var(--success); font-size:0.7rem; font-weight:800;">Within Limit (${pct.toFixed(0)}%)</span>`;
+        }
+      } else {
+        statusBadge = `<span style="color:var(--text-muted); font-size:0.7rem;">No Budget Limit Set</span>`;
+      }
+
       html += `
         <div class="tracker-card">
-          <h5><span>${escapeHtml(cat)}</span> <span class="tracker-amt" style="color:var(--danger)">₹${val.toFixed(2)}</span></h5>
+          <h5><span>${escapeHtml(cat)}</span> <span class="tracker-amt" style="color:var(--danger)">₹${spent.toFixed(2)}</span></h5>
+          ${limit > 0 ? `
+            <div class="progress-track">
+              <div class="progress-fill ${fillClass}" style="width: ${Math.min(pct, 100)}%;"></div>
+            </div>
+          ` : ''}
+          <div class="tracker-meta-text">
+            <span>${limit > 0 ? `Limit: ₹${limit.toFixed(2)}` : ''}</span>
+            ${statusBadge}
+          </div>
         </div>
       `;
     });
   }
   html += `</div>`;
 
-  // 2. Income Breakdown by Source/Mode
-  html += `<div class="report-section"><h4>📥 Income Breakdown by Source</h4>`;
+  // 2. Savings Goal Achievement Breakdown
+  html += `<div class="report-section"><h4>🎯 Savings Goals & Achievement %</h4>`;
+  if (Object.keys(categorySavings).length === 0) {
+    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No savings logged for selected range.</p></div>';
+  } else {
+    Object.entries(categorySavings).forEach(([cat, data]) => {
+      const target = categoryLimits[cat] || 0;
+      let pct = target > 0 ? (data.total / target) * 100 : 0;
+
+      let modeListHtml = '';
+      Object.entries(data.modes).forEach(([m, mVal]) => {
+        modeListHtml += `
+          <div class="mode-breakdown-item">
+            <span>Saved in ${escapeHtml(m)}:</span>
+            <span class="mode-val">₹${mVal.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="tracker-card">
+          <h5><span>${escapeHtml(cat)}</span> <span class="tracker-amt" style="color:var(--info)">₹${data.total.toFixed(2)}</span></h5>
+          ${target > 0 ? `
+            <div class="progress-track">
+              <div class="progress-fill fill-info" style="width: ${Math.min(pct, 100)}%;"></div>
+            </div>
+            <div class="tracker-meta-text">
+              <span>Goal Target: ₹${target.toFixed(2)}</span>
+              <span style="color:var(--info); font-weight:800;">${pct.toFixed(1)}% Achieved</span>
+            </div>
+          ` : '<div class="tracker-meta-text"><span>No Goal Target Configured</span></div>'}
+          <div class="mode-breakdown-list">
+            ${modeListHtml}
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+
+  // 3. Investment Portfolio Breakdown
+  html += `<div class="report-section"><h4>📈 Investment Assets & Modes</h4>`;
+  if (Object.keys(categoryInvestments).length === 0) {
+    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No investments logged for selected range.</p></div>';
+  } else {
+    Object.entries(categoryInvestments).forEach(([cat, data]) => {
+      let modeListHtml = '';
+      Object.entries(data.modes).forEach(([m, mVal]) => {
+        modeListHtml += `
+          <div class="mode-breakdown-item">
+            <span>Platform/Mode: ${escapeHtml(m)}</span>
+            <span class="mode-val">₹${mVal.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="tracker-card">
+          <h5><span>${escapeHtml(cat)}</span> <span class="tracker-amt" style="color:var(--purple)">₹${data.total.toFixed(2)}</span></h5>
+          <div class="mode-breakdown-list">
+            ${modeListHtml}
+          </div>
+        </div>
+      `;
+    });
+  }
+  html += `</div>`;
+
+  // 4. Income Sources
+  html += `<div class="report-section"><h4>📥 Income Sources</h4>`;
   if (Object.keys(incomeSources).length === 0) {
-    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No income recorded yet.</p></div>';
+    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No income logged for selected range.</p></div>';
   } else {
     Object.entries(incomeSources).forEach(([src, val]) => {
       html += `
@@ -583,64 +798,7 @@ function openAnalyticsReport() {
   }
   html += `</div>`;
 
-  // 3. Savings Purpose & Mode Breakdown
-  html += `<div class="report-section"><h4>🎯 Savings Saved by Purpose & Mode</h4>`;
-  if (Object.keys(savingsData).length === 0) {
-    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No custom savings entries logged yet.</p></div>';
-  } else {
-    Object.entries(savingsData).forEach(([purpose, pData]) => {
-      let modeListHtml = '';
-      Object.entries(pData.modes).forEach(([mode, mVal]) => {
-        modeListHtml += `
-          <div class="mode-breakdown-item">
-            <span>Mode: ${escapeHtml(mode)}</span>
-            <span class="mode-val">₹${mVal.toFixed(2)}</span>
-          </div>
-        `;
-      });
-
-      html += `
-        <div class="tracker-card">
-          <h5><span>${escapeHtml(purpose)}</span> <span class="tracker-amt" style="color:var(--info)">₹${pData.total.toFixed(2)}</span></h5>
-          <div class="mode-breakdown-list">
-            ${modeListHtml}
-          </div>
-        </div>
-      `;
-    });
-  }
-  html += `</div>`;
-
-  // 4. Investment Purpose & Mode Breakdown
-  html += `<div class="report-section"><h4>📈 Investment Assets & Platform Breakdown</h4>`;
-  if (Object.keys(invData).length === 0) {
-    html += '<div class="tracker-card"><p style="font-size:0.75rem; color:var(--text-muted)">No investments logged yet.</p></div>';
-  } else {
-    Object.entries(invData).forEach(([purpose, pData]) => {
-      let modeListHtml = '';
-      Object.entries(pData.modes).forEach(([mode, mVal]) => {
-        modeListHtml += `
-          <div class="mode-breakdown-item">
-            <span>Platform/Mode: ${escapeHtml(mode)}</span>
-            <span class="mode-val">₹${mVal.toFixed(2)}</span>
-          </div>
-        `;
-      });
-
-      html += `
-        <div class="tracker-card">
-          <h5><span>${escapeHtml(purpose)}</span> <span class="tracker-amt" style="color:var(--purple)">₹${pData.total.toFixed(2)}</span></h5>
-          <div class="mode-breakdown-list">
-            ${modeListHtml}
-          </div>
-        </div>
-      `;
-    });
-  }
-  html += `</div>`;
-
   body.innerHTML = html;
-  openModal('analyticsModal');
 }
 
 function escapeHtml(str) {
@@ -650,3 +808,4 @@ function escapeHtml(str) {
 </script>
 </body>
 </html>
+
