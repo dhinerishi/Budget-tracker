@@ -52,10 +52,11 @@ header { padding: 16px 20px; background: rgba(255, 255, 255, 0.9); backdrop-filt
 .summary-box.income p { color: var(--success); }
 .summary-box.expense p { color: var(--danger); }
 
-.dash-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.dash-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.dash-actions-row.full { grid-template-columns: 1fr; }
 .dash-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 12px 10px; border-radius: var(--radius); font-weight: 700; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: var(--shadow); }
 
-.section-title-wrapper { display: flex; justify-content: space-between; align-items: center; margin: 20px 20px 10px 20px; }
+.section-title-wrapper { display: flex; justify-content: space-between; align-items: center; margin: 16px 20px 10px 20px; }
 .section-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
 .transaction-list { padding: 0 20px; }
@@ -98,6 +99,11 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 
 .inline-input-box { display: flex; gap: 6px; }
 .add-inline-btn { width: 44px; height: 44px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px; font-size: 1.2rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+
+/* Category / Mode Management List Styles */
+.manage-list-box { background: var(--bg-subcard); padding: 10px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 14px; max-height: 180px; overflow-y: auto; }
+.manage-item { display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 6px; font-size: 0.85rem; font-weight: 700; }
+.btn-del-chip { background: #ffe4e6; color: var(--danger); border: 1px solid #fecdd3; width: 26px; height: 26px; border-radius: 13px; font-size: 0.8rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
 /* Report & Progress Bar Styles */
 .date-filter-box { background: var(--bg-subcard); padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px; display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: flex-end; }
@@ -190,8 +196,11 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
     </div>
 
     <div class="dash-actions-row">
-      <button class="dash-btn" id="btn-open-analytics">📊 View Detailed Report</button>
-      <button class="dash-btn" id="btn-open-limits">🎯 Set Category Limits</button>
+      <button class="dash-btn" id="btn-open-analytics">📊 Detailed Report</button>
+      <button class="dash-btn" id="btn-open-limits">🎯 Budget & Goals</button>
+    </div>
+    <div class="dash-actions-row full">
+      <button class="dash-btn" id="btn-open-manage">⚙️ Manage Categories & Modes</button>
     </div>
   </div>
 
@@ -213,7 +222,6 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
     <form id="add-form">
       <div class="form-group">
         <label>Amount (₹)</label>
-        <!-- Mobile Numeric Keypad Trigger -->
         <input type="text" id="amount" class="form-control" inputmode="decimal" pattern="[0-9\+\-\*\/\.]*" autocomplete="off" required placeholder="0.00">
         <div class="math-hint" id="math-hint">Evaluates to: ₹<span id="math-eval-val">0.00</span></div>
       </div>
@@ -258,6 +266,38 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 
       <button type="submit" class="btn-primary">Save Entry</button>
     </form>
+  </div>
+</div>
+
+<!-- Manage Categories & Modes Modal -->
+<div class="modal" id="manageModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span>Customize Categories & Modes</span>
+      <button class="close-btn" id="close-manage-modal">&times;</button>
+    </div>
+
+    <!-- Category Section -->
+    <div class="form-group">
+      <label>Categories / Goals List</label>
+      <div class="manage-list-box" id="manage-cat-list"></div>
+      <div class="inline-input-box">
+        <input type="text" id="new-cat-input" class="form-control" placeholder="New Category/Goal Name">
+        <button type="button" class="add-inline-btn" id="btn-add-cat-custom">+</button>
+      </div>
+    </div>
+
+    <hr style="border:0; border-top:1px dashed var(--border); margin: 16px 0;">
+
+    <!-- Mode Section -->
+    <div class="form-group">
+      <label>Payment / Saving Modes List</label>
+      <div class="manage-list-box" id="manage-mode-list"></div>
+      <div class="inline-input-box">
+        <input type="text" id="new-mode-input" class="form-control" placeholder="New Mode/Account Name">
+        <button type="button" class="add-inline-btn" id="btn-add-mode-custom">+</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -312,7 +352,7 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
       <button class="close-btn" id="close-analytics-modal">&times;</button>
     </div>
 
-    <!-- Date Range Selection -->
+    <!-- Date Range Selection (Initially set to whole current month) -->
     <div class="date-filter-box">
       <div class="form-group">
         <label>From Date</label>
@@ -333,7 +373,7 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 let transactions = [];
 let categories = ['Food & Dining', 'Groceries', 'Utilities & Bills', 'Rent', 'Shopping', 'Transport', 'Salary', 'Emergency Fund', 'New Bike', 'Child Savings', 'Stocks & Mutual Funds', 'Miscellaneous'];
 let modes = ['Liquid Cash', 'HDFC Bank', 'UPI', 'Recurring Deposit (RD)', 'Fixed Deposit (FD)', 'Zerodha', 'Groww', 'Post Office'];
-let categoryLimits = {}; // { 'Food & Dining': 5000, 'Emergency Fund': 100000 }
+let categoryLimits = {};
 
 try {
   const saved = localStorage.getItem('kanakkupulla_data');
@@ -368,19 +408,24 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('close-details-modal').onclick = () => closeModal('detailsModal');
   document.getElementById('close-analytics-modal').onclick = () => closeModal('analyticsModal');
   document.getElementById('close-limits-modal').onclick = () => closeModal('limitsModal');
+  document.getElementById('close-manage-modal').onclick = () => closeModal('manageModal');
 
-  document.getElementById('btn-open-analytics').onclick = () => { generateReport(); openModal('analyticsModal'); };
+  document.getElementById('btn-open-analytics').onclick = () => { setDefaultReportDates(); generateReport(); openModal('analyticsModal'); };
   document.getElementById('btn-open-limits').onclick = () => { renderConfiguredLimits(); openModal('limitsModal'); };
+  document.getElementById('btn-open-manage').onclick = () => { renderManageLists(); openModal('manageModal'); };
 
   document.getElementById('btn-quick-cat').onclick = handleQuickAddCategory;
   document.getElementById('btn-quick-mode').onclick = handleQuickAddMode;
+
+  document.getElementById('btn-add-cat-custom').onclick = handleAddCategoryFromManage;
+  document.getElementById('btn-add-mode-custom').onclick = handleAddModeFromManage;
 
   document.getElementById('add-form').onsubmit = handleFormSubmit;
   document.getElementById('limits-form').onsubmit = handleLimitSubmit;
   document.getElementById('btn-delete-record').onclick = deleteTransaction;
   document.getElementById('btn-apply-report-filter').onclick = generateReport;
 
-  // Amount Math Evaluator Listener
+  // Math Evaluator Listener
   const amountField = document.getElementById('amount');
   const mathHint = document.getElementById('math-hint');
   const mathEvalVal = document.getElementById('math-eval-val');
@@ -400,6 +445,24 @@ document.addEventListener('DOMContentLoaded', () => {
     mathHint.style.display = 'none';
   };
 });
+
+// Helper: Format Date YYYY-MM-DD
+function formatDateString(d) {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+// Automatically set filter dates to Current Whole Month
+function setDefaultReportDates() {
+  const now = new Date();
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  document.getElementById('report-from-date').value = formatDateString(firstDay);
+  document.getElementById('report-to-date').value = formatDateString(lastDay);
+}
 
 function populateDropdowns(selectedCat = null, selectedMode = null) {
   const catSelect = document.getElementById('category');
@@ -426,6 +489,93 @@ function populateDropdowns(selectedCat = null, selectedMode = null) {
   if (selectedMode) modeSelect.value = selectedMode;
 }
 
+// Manage Categories & Modes Handlers
+function renderManageLists() {
+  const catList = document.getElementById('manage-cat-list');
+  const modeList = document.getElementById('manage-mode-list');
+
+  catList.innerHTML = '';
+  categories.forEach((cat, index) => {
+    const item = document.createElement('div');
+    item.className = 'manage-item';
+    item.innerHTML = `
+      <span>${escapeHtml(cat)}</span>
+      <button type="button" class="btn-del-chip" onclick="deleteCategory(${index})" title="Delete Category">&times;</button>
+    `;
+    catList.appendChild(item);
+  });
+
+  modeList.innerHTML = '';
+  modes.forEach((m, index) => {
+    const item = document.createElement('div');
+    item.className = 'manage-item';
+    item.innerHTML = `
+      <span>${escapeHtml(m)}</span>
+      <button type="button" class="btn-del-chip" onclick="deleteMode(${index})" title="Delete Mode">&times;</button>
+    `;
+    modeList.appendChild(item);
+  });
+}
+
+function handleAddCategoryFromManage() {
+  const input = document.getElementById('new-cat-input');
+  const val = input.value.trim();
+  if (val) {
+    if (!categories.includes(val)) {
+      categories.push(val);
+      saveData();
+      populateDropdowns();
+      renderManageLists();
+    }
+    input.value = '';
+  }
+}
+
+function handleAddModeFromManage() {
+  const input = document.getElementById('new-mode-input');
+  const val = input.value.trim();
+  if (val) {
+    if (!modes.includes(val)) {
+      modes.push(val);
+      saveData();
+      populateDropdowns();
+      renderManageLists();
+    }
+    input.value = '';
+  }
+}
+
+function deleteCategory(index) {
+  if (categories.length <= 1) {
+    alert("You must maintain at least one category.");
+    return;
+  }
+  const name = categories[index];
+  if (confirm(`Delete category "${name}"?`)) {
+    categories.splice(index, 1);
+    if (categoryLimits[name]) delete categoryLimits[name];
+    saveData();
+    populateDropdowns();
+    renderManageLists();
+    updateUI();
+  }
+}
+
+function deleteMode(index) {
+  if (modes.length <= 1) {
+    alert("You must maintain at least one payment/saving mode.");
+    return;
+  }
+  const name = modes[index];
+  if (confirm(`Delete mode "${name}"?`)) {
+    modes.splice(index, 1);
+    saveData();
+    populateDropdowns();
+    renderManageLists();
+    updateUI();
+  }
+}
+
 function handleQuickAddCategory() {
   const newCat = prompt("Enter new category / saving goal name:");
   if (newCat && newCat.trim() !== "") {
@@ -441,7 +591,7 @@ function handleQuickAddCategory() {
 }
 
 function handleQuickAddMode() {
-  const newMode = prompt("Enter new payment / saving mode (e.g., HDFC Auto-Sweep, Cash, RD):");
+  const newMode = prompt("Enter new payment / saving mode (e.g. Bank, Cash, RD):");
   if (newMode && newMode.trim() !== "") {
     const cleanMode = newMode.trim();
     if (!modes.includes(cleanMode)) {
@@ -464,7 +614,7 @@ function handleLimitSubmit(e) {
     saveData();
     renderConfiguredLimits();
     document.getElementById('limit-target-amount').value = '';
-    alert(`Target/Limit of ₹${amt.toFixed(2)} set for "${cat}"`);
+    alert(`Target/Limit of ₹${amt.toFixed(2)} saved for "${cat}"`);
   }
 }
 
@@ -610,7 +760,7 @@ function deleteTransaction() {
   }
 }
 
-// Generate Complete Financial Report with Percentages, Limits & Visual Pie/Bar
+// Generate Complete Financial Report
 function generateReport() {
   const body = document.getElementById('analytics-report-body');
   if (!body) return;
@@ -624,8 +774,8 @@ function generateReport() {
 
   let totalExp = 0, totalInc = 0, totalSav = 0, totalInv = 0;
   const categoryExpenses = {};
-  const categorySavings = {}; // { GoalCategory: { total: X, modes: { ModeA: Y } } }
-  const categoryInvestments = {}; // { AssetCategory: { total: X, modes: { ModeA: Y } } }
+  const categorySavings = {};
+  const categoryInvestments = {};
   const incomeSources = {};
 
   filtered.forEach(t => {
