@@ -81,6 +81,7 @@ header { padding: 16px 20px; background: rgba(255, 255, 255, 0.9); backdrop-filt
 .t-info p { font-size: 0.72rem; color: var(--text-muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .badge { background: #f1f5f9; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; color: var(--text-muted); border: 1px solid var(--border); font-weight: 600; }
 .badge-mode { background: #e0e7ff; color: #3730a3; border-color: #c7d2fe; }
+.badge-img { background: #fef3c7; color: #92400e; border-color: #fde68a; }
 .t-amount { font-weight: 800; font-size: 1rem; }
 .t-amount.expense { color: var(--danger); }
 .t-amount.income { color: var(--success); }
@@ -265,6 +266,16 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
         <input type="text" id="desc" class="form-control" required placeholder="e.g. Monthly RD, Groceries, Loan to Friend">
       </div>
 
+      <!-- Optional Image Reference / Bill Upload -->
+      <div class="form-group">
+        <label>Attach Reference Photo / Bill (Optional)</label>
+        <input type="file" id="bill-image" class="form-control" accept="image/*">
+        <div id="image-preview-wrapper" style="display:none; margin-top:8px; align-items:center; gap:10px;">
+          <img id="image-preview-thumb" style="width:50px; height:50px; object-fit:cover; border-radius:8px; border:1px solid var(--border);">
+          <button type="button" id="btn-remove-image" class="btn-del-chip" style="width:auto; height:auto; padding:4px 8px; border-radius:6px; font-size:0.75rem;">Remove Image</button>
+        </div>
+      </div>
+
       <div class="form-group">
         <label>Date</label>
         <input type="date" id="date" class="form-control" required>
@@ -343,8 +354,17 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
     <div id="details-content">
       <h2 id="det-amount" style="font-size:1.8rem; margin-bottom:2px">₹0.00</h2>
       <p id="det-desc" style="font-size:1rem; font-weight:700; color:var(--text-main)"></p>
-      <p id="det-meta" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:14px"></p>
-      <p id="det-extra" style="font-size:0.8rem; color:var(--primary); font-weight:600; margin-bottom:14px"></p>
+      <p id="det-meta" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px"></p>
+      <p id="det-extra" style="font-size:0.8rem; color:var(--primary); font-weight:600; margin-bottom:12px"></p>
+
+      <!-- Attached Bill / Image Reference Container -->
+      <div id="det-image-wrapper" style="display:none; margin-bottom:14px; text-align:center;">
+        <p style="font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; font-weight:800; margin-bottom:6px; text-align:left;">Attached Reference / Bill</p>
+        <a id="det-image-link" target="_blank">
+          <img id="det-image" style="max-width:100%; max-height:260px; border-radius:12px; border:1px solid var(--border); box-shadow:var(--shadow); object-fit:contain; cursor:pointer;" title="Click to view full image">
+        </a>
+      </div>
+
       <button type="button" id="btn-delete-record" class="btn-primary btn-danger">Delete Entry</button>
     </div>
   </div>
@@ -380,6 +400,7 @@ let transactions = [];
 let categories = ['Food & Dining', 'Groceries', 'Utilities & Bills', 'Rent', 'Shopping', 'Transport', 'Salary', 'Emergency Fund', 'New Bike', 'Child Savings', 'Stocks & Mutual Funds', 'Miscellaneous'];
 let modes = ['Liquid Cash', 'HDFC Bank', 'UPI', 'Recurring Deposit (RD)', 'Fixed Deposit (FD)', 'Zerodha', 'Groww', 'Post Office'];
 let categoryLimits = {};
+let selectedImageBase64 = null;
 
 try {
   const saved = localStorage.getItem('kanakkupulla_data');
@@ -400,7 +421,9 @@ function saveData() {
     localStorage.setItem('kanakkupulla_cats', JSON.stringify(categories));
     localStorage.setItem('kanakkupulla_modes', JSON.stringify(modes));
     localStorage.setItem('kanakkupulla_limits', JSON.stringify(categoryLimits));
-  } catch(e) {}
+  } catch(e) {
+    alert("Storage limit reached! Try compressing images or deleting older attachments.");
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -431,6 +454,29 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-delete-record').onclick = deleteTransaction;
   document.getElementById('btn-apply-report-filter').onclick = generateReport;
 
+  // Image Upload Handling with Auto-compression to fit LocalStorage smoothly
+  const billImageInput = document.getElementById('bill-image');
+  const imagePreviewWrapper = document.getElementById('image-preview-wrapper');
+  const imagePreviewThumb = document.getElementById('image-preview-thumb');
+  const btnRemoveImage = document.getElementById('btn-remove-image');
+
+  billImageInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      compressAndConvertImage(file, (base64) => {
+        selectedImageBase64 = base64;
+        imagePreviewThumb.src = base64;
+        imagePreviewWrapper.style.display = 'flex';
+      });
+    }
+  };
+
+  btnRemoveImage.onclick = () => {
+    selectedImageBase64 = null;
+    billImageInput.value = '';
+    imagePreviewWrapper.style.display = 'none';
+  };
+
   const amountField = document.getElementById('amount');
   const mathHint = document.getElementById('math-hint');
   const mathEvalVal = document.getElementById('math-eval-val');
@@ -450,6 +496,40 @@ document.addEventListener('DOMContentLoaded', () => {
     mathHint.style.display = 'none';
   };
 });
+
+// Helper function to compress images before saving to LocalStorage
+function compressAndConvertImage(file, callback) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+      const maxDim = 600; // max dimension 600px keeps file around 40-80KB
+
+      if (width > height) {
+        if (width > maxDim) {
+          height *= maxDim / width;
+          width = maxDim;
+        }
+      } else {
+        if (height > maxDim) {
+          width *= maxDim / height;
+          height = maxDim;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      callback(canvas.toDataURL('image/jpeg', 0.7)); // Compress to 70% JPEG
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
 function formatDateString(d) {
   const year = d.getFullYear();
@@ -674,6 +754,7 @@ function updateUI() {
 
     const isOutflow = ['expense', 'lend'].includes(t.type);
     const prefix = isOutflow ? '-' : '+';
+    const imageBadge = t.image ? `<span class="badge badge-img">🧾 Bill</span>` : '';
 
     div.innerHTML = `
       <div class="t-info">
@@ -682,6 +763,7 @@ function updateUI() {
           <span>${t.date}</span>
           <span class="badge">${escapeHtml(t.category || 'General')}</span>
           <span class="badge badge-mode">💳 ${escapeHtml(t.mode || 'Cash')}</span>
+          ${imageBadge}
         </p>
       </div>
       <div class="t-amount ${t.type}">${prefix}₹${t.amount.toFixed(2)}</div>
@@ -724,7 +806,8 @@ function handleFormSubmit(e) {
     category: document.getElementById('category').value,
     mode: document.getElementById('payment-mode').value,
     desc: document.getElementById('desc').value,
-    date: document.getElementById('date').value
+    date: document.getElementById('date').value,
+    image: selectedImageBase64
   };
 
   transactions.push(newRecord);
@@ -733,6 +816,9 @@ function handleFormSubmit(e) {
   document.getElementById('add-form').reset();
   document.getElementById('date').valueAsDate = new Date();
   document.getElementById('math-hint').style.display = 'none';
+  selectedImageBase64 = null;
+  document.getElementById('image-preview-wrapper').style.display = 'none';
+
   closeModal('addModal');
   updateUI();
 }
@@ -749,6 +835,18 @@ function openDetails(id) {
   if (t.type === 'lend') typeTitle = 'LENDING (MONEY OWED TO YOU)';
   document.getElementById('det-meta').innerText = `${t.date} • ${typeTitle}`;
   document.getElementById('det-extra').innerText = `Category/Goal: ${t.category} | Mode: ${t.mode || 'Liquid Cash'}`;
+
+  const imageWrapper = document.getElementById('det-image-wrapper');
+  const imageEl = document.getElementById('det-image');
+  const imageLink = document.getElementById('det-image-link');
+
+  if (t.image) {
+    imageEl.src = t.image;
+    imageLink.href = t.image;
+    imageWrapper.style.display = 'block';
+  } else {
+    imageWrapper.style.display = 'none';
+  }
 
   openModal('detailsModal');
 }
